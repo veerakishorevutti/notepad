@@ -1,54 +1,98 @@
+@import url('https://fonts.googleapis.com/css2?family=Newsreader:opsz@6..72&display=swap');
+
 body {
-    background-color: #f5f1e8;
+    background-color: #EFEBE4; /* The outer, slightly darker beige */
     font-family: 'Newsreader', serif;
+    margin: 0;
+    padding: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    box-sizing: border-box;
 }
 
 .container {
-    max-width: 800px;
-    margin: 50px auto;
-    background-color: #fff;
-    border: 1px solid #ddd;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-}
-
-.toolbar {
-    padding: 10px;
-    background-color: #f5f1e8;
-    border-bottom: 1px solid #ddd;
-}
-
-.toolbar select, .toolbar input, .toolbar button {
-    margin-right: 5px;
-    padding: 5px;
-    border: 1px solid #ccc;
-    border-radius: 3px;
-}
-
-.editor-container {
     display: flex;
+    width: 100%;
+    max-width: 900px;
+    height: 600px;
+    background-color: #F8F5F0; /* The inner, lighter paper color */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    border: 1px solid #DCD8D0;
 }
 
 .sidebar {
-    width: 100px;
-    padding: 10px;
-    background-color: #333;
-    color: #fff;
+    flex: 0 0 120px;
+    background-color: #5D5D5D; /* Dark charcoal sidebar */
+    padding: 20px 10px;
     display: flex;
     flex-direction: column;
+    align-items: center;
+    gap: 15px;
+    border-radius: 8px 0 0 8px; /* Rounded corners on one side */
 }
 
 .sidebar button {
     background-color: transparent;
     border: none;
-    color: #fff;
-    text-align: left;
-    padding: 10px 0;
+    color: #D3D3D3; /* Light gray text/icons */
+    font-size: 14px;
+    font-family: sans-serif;
     cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+    padding: 10px;
+    border-radius: 4px;
+}
+
+.sidebar button:hover {
+    background-color: #707070;
+}
+
+.main-content {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.toolbar {
+    padding: 8px 16px;
+    background-color: #F8F5F0;
+    border-bottom: 1px solid #DCD8D0;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.toolbar select, .toolbar input, .toolbar button {
+    background: none;
+    border: none;
+    padding: 4px;
+    font-family: sans-serif;
+    font-size: 14px;
+    cursor: pointer;
+}
+.toolbar button {
+    font-weight: bold;
+}
+.toolbar select {
+   -webkit-appearance: none;
+   appearance: none;
 }
 
 #editor {
     flex-grow: 1;
-    padding: 20px;
-    min-height: 400px;
+    padding: 20px 30px;
     outline: none;
+    color: #333;
+    font-size: 16px;
+}
+
+#editor:empty:before {
+    content: 'Start writing your notes here...';
+    color: #aaa;
+    pointer-events: none;
 }

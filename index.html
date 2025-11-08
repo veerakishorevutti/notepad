@@ -8,29 +8,29 @@
 </head>
 <body>
     <div class="container">
-        <div class="toolbar">
-            <select id="font-family">
-                <option value="Newsreader">Newsreader</option>
-                <option value="Arial">Arial</option>
-                <option value="Verdana">Verdana</option>
-                <option value="Times New Roman">Times New Roman</option>
-                <option value="Courier New">Courier New</option>
-            </select>
-            <input type="number" id="font-size" value="12">
-            <button id="bold">B</button>
-            <button id="italic">I</button>
-            <button id="underline">U</button>
-            <button id="align-left">Left</button>
-            <button id="align-center">Center</button>
-            <button id="align-right">Right</button>
-            <button id="list-ul">UL</button>
-            <button id="list-ol">OL</button>
+        <div class="sidebar">
+            <button id="save">Save</button>
         </div>
-        <div class="editor-container">
-            <div class="sidebar">
-                <button id="save">Save</button>
+        <div class="main-content">
+            <div class="toolbar">
+                <select id="font-family">
+                    <option value="Newsreader">Newsreader</option>
+                    <option value="Arial">Arial</option>
+                    <option value="Verdana">Verdana</option>
+                    <option value="Times New Roman">Times New Roman</option>
+                    <option value="Courier New">Courier New</option>
+                </select>
+                <input type="number" id="font-size" value="12">
+                <button id="bold">B</button>
+                <button id="italic">I</button>
+                <button id="underline">U</button>
+                <button id="align-left">Left</button>
+                <button id="align-center">Center</button>
+                <button id="align-right">Right</button>
+                <button id="list-ul">UL</button>
+                <button id="list-ol">OL</button>
             </div>
-            <div id="editor" contenteditable="true">Start writing your notes here...</div>
+            <div id="editor" contenteditable="true"></div>
         </div>
     </div>
     <script src="script.js"></script>
