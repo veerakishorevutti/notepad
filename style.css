@@ -1,0 +1,54 @@
+body {
+    background-color: #f5f1e8;
+    font-family: 'Newsreader', serif;
+}
+
+.container {
+    max-width: 800px;
+    margin: 50px auto;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.toolbar {
+    padding: 10px;
+    background-color: #f5f1e8;
+    border-bottom: 1px solid #ddd;
+}
+
+.toolbar select, .toolbar input, .toolbar button {
+    margin-right: 5px;
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+}
+
+.editor-container {
+    display: flex;
+}
+
+.sidebar {
+    width: 100px;
+    padding: 10px;
+    background-color: #333;
+    color: #fff;
+    display: flex;
+    flex-direction: column;
+}
+
+.sidebar button {
+    background-color: transparent;
+    border: none;
+    color: #fff;
+    text-align: left;
+    padding: 10px 0;
+    cursor: pointer;
+}
+
+#editor {
+    flex-grow: 1;
+    padding: 20px;
+    min-height: 400px;
+    outline: none;
+}
