@@ -10,9 +10,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const alignRight = document.getElementById('align-right');
     const listUl = document.getElementById('list-ul');
     const listOl = document.getElementById('list-ol');
-    const save = document.getElementById('save');
+    const saveDoc = document.getElementById('save-doc');
+    const saveTxt = document.getElementById('save-txt');
 
-    let fileHandle; // This will store the handle to the file
+    let fileHandles = {}; // Store handles for different file types (doc, txt)
 
     // --- Rich Text Editor Commands ---
     fontFamily.addEventListener('change', () => document.execCommand('fontName', false, fontFamily.value));
@@ -26,35 +27,51 @@ document.addEventListener('DOMContentLoaded', () => {
     listUl.addEventListener('click', () => document.execCommand('insertUnorderedList'));
     listOl.addEventListener('click', () => document.execCommand('insertOrderedList'));
 
-    // --- Save Functionality ---
-    const saveFile = async () => {
-        const noteContent = editor.innerHTML;
-        const blob = new Blob([noteContent], { type: 'text/html' });
+    // --- Generic Save Functionality ---
+    const saveFile = async (fileType) => {
+        let content, blobType, pickerOptions, defaultExtension;
+
+        if (fileType === 'doc') {
+            content = editor.innerHTML;
+            blobType = 'application/msword';
+            defaultExtension = 'doc';
+            pickerOptions = {
+                types: [{
+                    description: 'Word Document',
+                    accept: { 'application/msword': ['.doc'] },
+                }],
+            };
+        } else if (fileType === 'txt') {
+            content = editor.innerText;
+            blobType = 'text/plain';
+            defaultExtension = 'txt';
+            pickerOptions = {
+                types: [{
+                    description: 'Text Files',
+                    accept: { 'text/plain': ['.txt'] },
+                }],
+            };
+        } else {
+            console.error("Unsupported file type");
+            return;
+        }
+
+        const blob = new Blob([content], { type: blobType });
 
         // Use the File System Access API if available
         if ('showSaveFilePicker' in window) {
             try {
-                // If we don't have a file handle yet, show the save dialog
-                if (!fileHandle) {
-                    fileHandle = await window.showSaveFilePicker({
-                        types: [{
-                            description: 'HTML Files',
-                            accept: { 'text/html': ['.html', '.htm'] },
-                        }],
-                    });
+                if (!fileHandles[fileType]) {
+                    fileHandles[fileType] = await window.showSaveFilePicker(pickerOptions);
                 }
 
-                // Create a writable stream to the file
-                const writable = await fileHandle.createWritable();
-                // Write the blob to the file
+                const writable = await fileHandles[fileType].createWritable();
                 await writable.write(blob);
-                // Close the file and write the contents to disk
                 await writable.close();
 
-                alert('Note saved successfully!');
+                alert(`Note saved successfully as a .${defaultExtension} file!`);
 
             } catch (err) {
-                // Handle user cancellation or other errors
                 if (err.name !== 'AbortError') {
                     console.error('Could not save the file:', err);
                     alert('Error saving file.');
@@ -65,11 +82,12 @@ document.addEventListener('DOMContentLoaded', () => {
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url;
-            a.download = 'note.html';
+            a.download = `note.${defaultExtension}`;
             a.click();
             URL.revokeObjectURL(url);
         }
     };
 
-    save.addEventListener('click', saveFile);
+    saveDoc.addEventListener('click', () => saveFile('doc'));
+    saveTxt.addEventListener('click', () => saveFile('txt'));
 });
