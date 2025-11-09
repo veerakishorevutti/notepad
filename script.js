@@ -36,75 +36,8 @@ document.addEventListener('DOMContentLoaded', () => {
     listUl.addEventListener('click', () => document.execCommand('insertUnorderedList'));
     listOl.addEventListener('click', () => document.execCommand('insertOrderedList'));
 
-    // --- UI Interactions ---
-    mainActionBtn.addEventListener('click', () => {
-        actionsMenu.classList.toggle('visible');
-    });
-
-    closeExplorerBtn.addEventListener('click', () => {
-        fileExplorer.classList.add('hidden');
-    });
-
-    // --- Folder and File Handling ---
-    const createNewFile = () => {
-        editor.innerHTML = '';
-        currentFileHandle = null;
-        saveButton.disabled = false;
-    };
-
-    const openDirectory = async () => {
-        try {
-            directoryHandle = await window.showDirectoryPicker();
-            if (directoryHandle) {
-                await listFiles(directoryHandle);
-            }
-        } catch (err) {
-            if (err.name !== 'AbortError') {
-                console.error('Error opening directory:', err);
-                alert('Could not open directory.');
-            }
-        }
-    };
-
-    const listFiles = async (dirHandle) => {
-        fileList.innerHTML = ''; // Clear the list
-        for await (const entry of dirHandle.values()) {
-            if (entry.kind === 'file') {
-                const li = document.createElement('li');
-                li.textContent = entry.name;
-                li.dataset.fileName = entry.name;
-                fileList.appendChild(li);
-            }
-        }
-        fileExplorer.classList.remove('hidden');
-    };
-
-    const saveFile = async () => {
-        if (!currentFileHandle) {
-            saveAs('txt');
-            return;
-        }
-
-        try {
-            const writable = await currentFileHandle.createWritable();
-            let content;
-            if (currentFileHandle.name.endsWith('.txt')) {
-                content = editor.innerText;
-            } else {
-                content = editor.innerHTML;
-            }
-            const blob = new Blob([content], { type: 'text/plain' });
-            await writable.write(blob);
-            await writable.close();
-            alert("File saved successfully!");
-        } catch (err) {
-            console.error('Error saving file:', err);
-            alert('Could not save the file.');
-        }
-    };
-
-    // --- "Save As..." Functionality ---
-    const saveAs = async (fileType) => {
+    // --- Generic Save Functionality ---
+    const saveFile = async (fileType) => {
         let content, blobType, pickerOptions, defaultExtension;
 
         if (fileType === 'doc') {
@@ -134,15 +67,19 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const blob = new Blob([content], { type: blobType });
 
+        // Use the File System Access API if available
         if ('showSaveFilePicker' in window) {
             try {
-                const handle = await window.showSaveFilePicker(pickerOptions);
-                const writable = await handle.createWritable();
+                if (!fileHandles[fileType]) {
+                    fileHandles[fileType] = await window.showSaveFilePicker(pickerOptions);
+                }
+
+                const writable = await fileHandles[fileType].createWritable();
                 await writable.write(blob);
                 await writable.close();
+
                 alert(`Note saved successfully as a .${defaultExtension} file!`);
-                currentFileHandle = handle;
-                saveButton.disabled = false;
+
             } catch (err) {
                 if (err.name !== 'AbortError') {
                     console.error('Could not save the file:', err);
@@ -150,6 +87,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             }
         } else {
+            // Fallback for older browsers
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url;
@@ -159,36 +97,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
 
-    const loadFile = async (fileName) => {
-        if (!directoryHandle) return;
-
-        try {
-            currentFileHandle = await directoryHandle.getFileHandle(fileName);
-            const file = await currentFileHandle.getFile();
-            const contents = await file.text();
-
-            if (fileName.endsWith('.txt')) {
-                editor.innerText = contents;
-            } else {
-                editor.innerHTML = contents;
-            }
-            saveButton.disabled = false;
-        } catch (err) {
-            console.error('Error loading file:', err);
-            alert('Could not load the selected file.');
-        }
-    };
-
-    fileList.addEventListener('click', (event) => {
-        if (event.target.tagName === 'LI') {
-            const fileName = event.target.dataset.fileName;
-            loadFile(fileName);
-        }
-    });
-
-    newFile.addEventListener('click', createNewFile);
-    saveButton.addEventListener('click', saveFile);
-    saveDoc.addEventListener('click', () => saveAs('doc'));
-    saveTxt.addEventListener('click', () => saveAs('txt'));
-    openFolder.addEventListener('click', openDirectory);
+    saveDoc.addEventListener('click', () => saveFile('doc'));
+    saveTxt.addEventListener('click', () => saveFile('txt'));
 });
