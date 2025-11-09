@@ -10,10 +10,19 @@ document.addEventListener('DOMContentLoaded', () => {
     const alignRight = document.getElementById('align-right');
     const listUl = document.getElementById('list-ul');
     const listOl = document.getElementById('list-ol');
+    const saveButton = document.getElementById('save');
     const saveDoc = document.getElementById('save-doc');
     const saveTxt = document.getElementById('save-txt');
+    const openFolder = document.getElementById('open-folder');
+    const newFile = document.getElementById('new-file');
+    const fileList = document.getElementById('file-list');
+    const fileExplorer = document.getElementById('file-explorer');
+    const mainActionBtn = document.getElementById('main-action-btn');
+    const actionsMenu = document.querySelector('.actions-menu');
+    const closeExplorerBtn = document.getElementById('close-explorer-btn');
 
-    let fileHandles = {}; // Store handles for different file types (doc, txt)
+    let directoryHandle; // Store the handle for the opened directory
+    let currentFileHandle; // Store the handle for the currently opened file
 
     // --- Rich Text Editor Commands ---
     fontFamily.addEventListener('change', () => document.execCommand('fontName', false, fontFamily.value));
