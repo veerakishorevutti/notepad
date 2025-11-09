@@ -7,11 +7,23 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="container">
-        <div class="sidebar">
+    <div class="floating-notch">
+        <button id="main-action-btn">&#9776;</button>
+        <div class="actions-menu">
+            <button id="new-file">New File</button>
+            <button id="open-folder">Open Folder</button>
+            <button id="save" disabled>Save</button>
             <button id="save-doc">Save as DOC</button>
             <button id="save-txt">Save as TXT</button>
         </div>
+    </div>
+
+    <div id="file-explorer" class="floating-panel hidden">
+        <button id="close-explorer-btn">&times;</button>
+        <ul id="file-list"></ul>
+    </div>
+
+    <div class="container">
         <div class="main-content">
             <div class="toolbar">
                 <select id="font-family">
@@ -31,7 +43,9 @@
                 <button id="list-ul">UL</button>
                 <button id="list-ol">OL</button>
             </div>
-            <div id="editor" contenteditable="true"></div>
+            <div id="editor-wrapper">
+                <div id="editor" contenteditable="true"></div>
+            </div>
         </div>
     </div>
     <script src="script.js"></script>
